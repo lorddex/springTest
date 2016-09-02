@@ -6,7 +6,6 @@ import org.ldlabs.spring.test.model.Student;
 import org.ldlabs.spring.test.repository.StudentRepository;
 import org.ldlabs.spring.test.rest.response.FindResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -55,9 +54,24 @@ public class AlumniRestController {
 				query.addCriteria(Criteria.where("education.master").exists(true));
 			}
 		}
-		
+
 		List<Student> found = mongoTemplate.find(query, Student.class);
 		
+//		if (education != null)
+//		{
+//			Education educationQuery = new Education();
+//			if ("phd".equals(education))
+//			{
+//				educationQuery.setPhd(new Course());
+//			} 
+//			else if ("master".equals(education))
+//			{
+//				educationQuery.setMaster(new Course());
+//			}
+//		}
+//		
+//		Page<Student> found = repository.findByNameAndMasterEducation(name, new PageRequest(page, limit));
+	
 		if (found == null || found.isEmpty())
 		{
 			return new ResponseEntity<FindResponseBody>(HttpStatus.NO_CONTENT);
