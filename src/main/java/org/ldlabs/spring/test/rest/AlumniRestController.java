@@ -1,6 +1,6 @@
 package org.ldlabs.spring.test.rest;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.ldlabs.spring.test.model.Student;
 import org.ldlabs.spring.test.repository.StudentRepository;
@@ -8,6 +8,9 @@ import org.ldlabs.spring.test.rest.response.FindResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,30 +27,45 @@ public class AlumniRestController {
 	@Autowired
 	private StudentRepository repository;
 	
+	@Autowired 
+	private MongoTemplate mongoTemplate;
+	
 	@RequestMapping(value="/ex-1/alumni", method=RequestMethod.GET, produces={"application/json"})
     public ResponseEntity<FindResponseBody> find(@RequestParam(value="name", required=false) String name, 
+    		@RequestParam(value="education", required=false) String education,
     		@RequestParam(value="page", defaultValue = "0") Integer page, 
     		@RequestParam(value="limit", defaultValue = "100") Integer limit) {
 		
-		Page<Student> found = null;
+		Query query = new Query();
+		query.with(new PageRequest(page, limit));
 		
-		if (name == null)
+		if (name != null)
 		{
-			found = repository.findAll(new PageRequest(page, limit));
-		}
-		else
-		{
-			found = repository.findByName(name, new PageRequest(page, limit));
+			query.addCriteria(Criteria.where("name").is(name));
 		}
 		
-		if (found == null || !found.hasContent())
+		if (education != null)
+		{
+			if ("phd".equals(education))
+			{
+				query.addCriteria(Criteria.where("education.phd").exists(true));
+			}
+			else if ("master".equals(education))
+			{
+				query.addCriteria(Criteria.where("education.master").exists(true));
+			}
+		}
+		
+		List<Student> found = mongoTemplate.find(query, Student.class);
+		
+		if (found == null || found.isEmpty())
 		{
 			return new ResponseEntity<FindResponseBody>(HttpStatus.NO_CONTENT);
 		}
 		
 		FindResponseBody response = new FindResponseBody();
-		response.setData(found.getContent());
-		response.setTotalCount(found.getNumberOfElements());
+		response.setData(found);
+		response.setTotalCount(found.size());
 		
 		return new ResponseEntity<FindResponseBody>(response, HttpStatus.OK);
 		
