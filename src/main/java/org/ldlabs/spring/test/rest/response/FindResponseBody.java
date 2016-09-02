@@ -1,4 +1,4 @@
-package org.ldlabs.spring.test.rest;
+package org.ldlabs.spring.test.rest.response;
 
 import java.util.Collection;
 

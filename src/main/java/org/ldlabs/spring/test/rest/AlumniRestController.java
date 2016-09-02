@@ -2,11 +2,12 @@ package org.ldlabs.spring.test.rest;
 
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.ldlabs.spring.test.model.Student;
 import org.ldlabs.spring.test.repository.StudentRepository;
+import org.ldlabs.spring.test.rest.response.FindResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,27 +25,29 @@ public class AlumniRestController {
 	private StudentRepository repository;
 	
 	@RequestMapping(value="/ex-1/alumni", method=RequestMethod.GET, produces={"application/json"})
-    public ResponseEntity<FindResponseBody> find(@RequestParam(value="name", required=false) String name) {
+    public ResponseEntity<FindResponseBody> find(@RequestParam(value="name", required=false) String name, 
+    		@RequestParam(value="page", defaultValue = "0") Integer page, 
+    		@RequestParam(value="limit", defaultValue = "100") Integer limit) {
 		
-		Collection<Student> found = null;
+		Page<Student> found = null;
 		
 		if (name == null)
 		{
-			found = repository.findAll();
+			found = repository.findAll(new PageRequest(page, limit));
 		}
 		else
 		{
-			found = repository.findByName(name);
+			found = repository.findByName(name, new PageRequest(page, limit));
 		}
 		
-		if (found == null || found.isEmpty())
+		if (found == null || !found.hasContent())
 		{
 			return new ResponseEntity<FindResponseBody>(HttpStatus.NO_CONTENT);
 		}
 		
 		FindResponseBody response = new FindResponseBody();
-		response.setData(found);
-		response.setTotalCount(found.size());
+		response.setData(found.getContent());
+		response.setTotalCount(found.getNumberOfElements());
 		
 		return new ResponseEntity<FindResponseBody>(response, HttpStatus.OK);
 		
