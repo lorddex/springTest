@@ -1,13 +1,17 @@
 package org.ldlabs.spring.test.model;
 
+import javax.validation.constraints.NotNull;
 
 public class Address
 {
-
+	
+	@NotNull
 	private String street;
 	
+	@NotNull
 	private Integer number;
 	
+	@NotNull
 	private String country;
 	
 	public Address()
