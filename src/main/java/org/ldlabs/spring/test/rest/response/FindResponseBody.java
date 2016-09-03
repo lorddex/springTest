@@ -1,17 +1,17 @@
+
 package org.ldlabs.spring.test.rest.response;
 
 import java.util.Collection;
 
 import org.ldlabs.spring.test.model.Student;
 
-
 public class FindResponseBody
 {
 
-	private Integer totalCount;
-	
-	private Collection<Student> data;
-	
+	private Integer	totalCount;
+
+	private Collection<Student>	data;
+
 	public FindResponseBody()
 	{
 		super();
@@ -26,7 +26,8 @@ public class FindResponseBody
 	}
 
 	/**
-	 * @param totalCount the totalCount to set
+	 * @param totalCount
+	 *            the totalCount to set
 	 */
 	public void setTotalCount(Integer totalCount)
 	{
@@ -42,11 +43,12 @@ public class FindResponseBody
 	}
 
 	/**
-	 * @param data the data to set
+	 * @param data
+	 *            the data to set
 	 */
 	public void setData(Collection<Student> data)
 	{
 		this.data = data;
 	}
-	
+
 }

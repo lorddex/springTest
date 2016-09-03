@@ -9,6 +9,12 @@ import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
 
+/**
+ * Lo studente.
+ * 
+ * @author Francesco Apollonio
+ *
+ */
 public class Student {
 
 	@Id

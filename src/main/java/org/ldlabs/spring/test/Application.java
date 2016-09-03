@@ -1,5 +1,5 @@
-package org.ldlabs.spring.test;
 
+package org.ldlabs.spring.test;
 
 import java.util.ArrayList;
 
@@ -14,17 +14,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application implements CommandLineRunner {
+public class Application implements CommandLineRunner
+{
 
 	@Autowired
 	private StudentRepository repository;
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		SpringApplication.run(Application.class, args);
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) throws Exception
+	{
 
 		repository.deleteAll();
 
@@ -34,10 +37,12 @@ public class Application implements CommandLineRunner {
 		student.setAddresses(new ArrayList<Address>());
 		student.getAddresses().add(address);
 		student.setEducation(new Education());
-		student.getEducation().setMaster(new Course("Universita' di Bologna", 2010));
-		student.getEducation().setPhd(new Course("Universita' di Bologna", 2013));
+		student.getEducation().setMaster(
+				new Course("Universita' di Bologna", 2010));
+		student.getEducation().setPhd(
+				new Course("Universita' di Bologna", 2013));
 		repository.save(student);
-		
+
 	}
 
 }

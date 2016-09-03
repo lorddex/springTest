@@ -1,3 +1,4 @@
+
 package org.ldlabs.spring.test.rest;
 
 import java.util.List;
@@ -31,40 +32,66 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  *
  */
 @RestController
-public class AlumniRestController {
+public class AlumniRestController
+{
 
-	private static final String	REST_BASE	= "/ex-1/alumni";
+	/**
+	 * The REST base path.
+	 */
+	public static final String	REST_BASE	= "/ex-1/alumni";
 
 	@Autowired
 	private StudentRepository repository;
-	
-	@Autowired 
+
+	@Autowired
 	private MongoTemplate mongoTemplate;
 
-    /**
-     * Restituisce una serie di elementi ricercati in base ai parametri. La richiesta puo' essere paginata.
-     * 
-     * @param name Il nome dello studente da trovare. La ricerca e' case insensitive.
-     * @param education Puo' essere <b>phd</b> o <b>master</b>. Se specificato ricerca uno studente che abbia un master o il phd.
-     * @param page Il numero di pagina da ottenere.
-     * @param limit Il numero di elementi da ritornare nella pagina.
-     * 
-     * @return Un oggetto di tipo {@link FindResponseBody}.
-     */
-    @RequestMapping(value=REST_BASE, method=RequestMethod.GET, produces={"application/json"})
-    public ResponseEntity<FindResponseBody> find(@RequestParam(value="name", required=false) String name, 
-    		@RequestParam(value="education", required=false) String education,
-    		@RequestParam(value="page", defaultValue = "0") Integer page, 
-    		@RequestParam(value="limit", defaultValue = "100") Integer limit) {
-		
+	/**
+	 * Restituisce una serie di elementi ricercati
+	 * in base ai parametri. La richiesta puo'
+	 * essere paginata.
+	 * Ex. GET
+	 * 
+	 * <pre>
+	 * GET /ex-1/alumni?name=pippo&amp;education=master&amp;page=0&amp;limit=1 HTTP/1.1
+	 * Host: localhost:8080
+	 * Cache-Control: no-cache
+	 * </pre>
+	 * 
+	 * @param name
+	 *            Il nome dello studente da
+	 *            trovare. La ricerca e' case
+	 *            insensitive.
+	 * @param education
+	 *            Puo' essere <b>phd</b> o
+	 *            <b>master</b>. Se specificato
+	 *            ricerca uno studente che abbia
+	 *            un master o il phd.
+	 * @param page
+	 *            Il numero di pagina da ottenere.
+	 * @param limit
+	 *            Il numero di elementi da
+	 *            ritornare nella pagina.
+	 * 
+	 * @return Un oggetto di tipo
+	 *         {@link FindResponseBody}.
+	 */
+	@RequestMapping(value = REST_BASE, method = RequestMethod.GET, produces = { "application/json" })
+	public ResponseEntity<FindResponseBody> find(
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "education", required = false) String education,
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "limit", defaultValue = "100") Integer limit)
+	{
+
 		Query query = new Query();
 		query.with(new PageRequest(page, limit));
-		
+
 		if (name != null)
 		{
 			query.addCriteria(Criteria.where("name").regex(name, "i"));
 		}
-		
+
 		if (education != null)
 		{
 			if ("phd".equals(education.toLowerCase()))
@@ -73,65 +100,128 @@ public class AlumniRestController {
 			}
 			else if ("master".equals(education.toLowerCase()))
 			{
-				query.addCriteria(Criteria.where("education.master").exists(true));
+				query.addCriteria(Criteria.where("education.master").exists(
+						true));
 			}
 		}
 
 		List<Student> found = mongoTemplate.find(query, Student.class);
-		
-		if (found == null || found.isEmpty())
-		{
-			return new ResponseEntity<FindResponseBody>(HttpStatus.NO_CONTENT);
-		}
-		
+
+		if (found == null || found.isEmpty()) { return new ResponseEntity<FindResponseBody>(
+				HttpStatus.NO_CONTENT); }
+
 		FindResponseBody response = new FindResponseBody();
 		response.setData(found);
 		response.setTotalCount(found.size());
-		
+
 		return new ResponseEntity<FindResponseBody>(response, HttpStatus.OK);
-		
-    }
-    
-    /**
-     * Metodo per ottenere uno Studente a partire dal suo id.
-     * 
-     * @param studentId L'id stringa dello studente da ottenere.
-     * 
-     * @return Lo studente trovato a partire dal suo id, codice di errore 404 nel caso non ci sia uno studente con quel nome.
-     */
-    @RequestMapping(value=REST_BASE+"/{studentId}", method=RequestMethod.GET, produces={"application/json"})
-    public ResponseEntity<Student> get(@PathVariable String studentId) {
-		
-    	ResponseEntity<Student> response = null;
+
+	}
+
+	/**
+	 * Metodo per ottenere uno Studente a partire
+	 * dal suo id.
+	 * 
+	 * Ex:
+	 * 
+	 * <pre>
+	 * GET /ex-1/alumni/57caa7e97073e61b678c884c HTTP/1.1
+	 * Host: localhost:8080
+	 * Cache-Control: no-cache
+	 * </pre>
+	 * 
+	 * @param studentId
+	 *            L'id stringa dello studente da
+	 *            ottenere.
+	 * 
+	 * @return Lo studente trovato a partire dal
+	 *         suo id, codice di errore 404 nel
+	 *         caso non ci sia uno studente con
+	 *         quel nome.
+	 */
+	@RequestMapping(value = REST_BASE + "/{studentId}", method = RequestMethod.GET, produces = { "application/json" })
+	public ResponseEntity<Student> get(@PathVariable String studentId)
+	{
+
 		Student student = repository.findOne(studentId);
-		
+
 		if (student == null)
 		{
-			response = new ResponseEntity<Student>(null, null, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Student>(null, null, HttpStatus.NOT_FOUND);
 		}
 		else
 		{
-			response = new ResponseEntity<Student>(student, HttpStatus.OK);
+			return new ResponseEntity<Student>(student, HttpStatus.OK);
 		}
-		
-		return response;
-		
-    }
-	
-    /**
-     * Metodo per salvare un nuovo studente.
-     * 
-     * @param student Lo studente da salvare.
-     * 
-     * @return Il codice di ritorno e' 201 e nell'header e' presente un link alla location con cui ottenere l'oggetto salvato.
-     */
-	@RequestMapping(value=REST_BASE, method=RequestMethod.POST, consumes={"application/json"})
-    public ResponseEntity<?> insert(@RequestBody @Valid Student student, BindingResult result) {
-		
+
+	}
+
+	/**
+	 * Metodo per salvare un nuovo studente. Il
+	 * metodo effettua la validazione del dato in
+	 * ingresso, seguendo le constraint di
+	 * validazione
+	 * specificate nel modello.
+	 * 
+	 * Unico metodo protetto con login:
+	 * <ul>
+	 * <li>User: admin</li>
+	 * <li>Password: test</li>
+	 * </ul>
+	 * 
+	 * Ex:
+	 * 
+	 * <pre>
+	 * POST /ex-1/alumni HTTP/1.1
+	 * Host: localhost:8080
+	 * Content-Type: application/json
+	 * Authorization: Basic YWRtaW46dGVzdA==
+	 * Cache-Control: no-cache
+	 * 
+	 * {
+	 *     "name": "nome",
+	 *     "addresses": [
+	 *         { 
+	 *             "street": "test", 
+	 *             "number": 1, 
+	 *             "country": "country"
+	 *         },
+	 *         { 
+	 *             "street": "streetname2", 
+	 *             "number": 33, 
+	 *             "country": "country"
+	 *         }
+	 *     ],
+	 *     "education": { 
+	 *         "master": { 
+	 *             "university": "Politecnico Milano", 
+	 *             "year": 2004
+	 *         },
+	 *         "phd": { 
+	 *             "university": "UCSD", 
+	 *             "year": 2009
+	 *         }
+	 *     }
+	 * }
+	 * </pre>
+	 * 
+	 * @param student
+	 *            Lo studente da salvare.
+	 * 
+	 * @return Il codice di ritorno e' 201 e
+	 *         nell'header e' presente un link
+	 *         alla location con cui ottenere
+	 *         l'oggetto salvato.
+	 */
+	@RequestMapping(value = REST_BASE, method = RequestMethod.POST, consumes = { "application/json" })
+	public ResponseEntity<?> insert(@RequestBody @Valid Student student,
+			BindingResult result)
+	{
+
 		if (!result.hasErrors())
 		{
 			Student saved = repository.save(student);
-			
+
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(ServletUriComponentsBuilder
 					.fromCurrentRequest().path("/{id}")
@@ -140,8 +230,9 @@ public class AlumniRestController {
 		}
 		else
 		{
-			return new ResponseEntity<>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(result.getAllErrors(),
+					HttpStatus.BAD_REQUEST);
 		}
-    }
-    
+	}
+
 }
