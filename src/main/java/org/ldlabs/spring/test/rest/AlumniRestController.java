@@ -1,6 +1,7 @@
 
 package org.ldlabs.spring.test.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,7 +96,11 @@ public class AlumniRestController
 			}
 			catch (IllegalArgumentException e)
 			{
-				return new ResponseEntity<FindResponseBody>(HttpStatus.BAD_REQUEST);
+				FindResponseBody response = new FindResponseBody();
+				response.setErrorMessages(new ArrayList<String>());
+				response.getErrorMessages().add(e.getMessage());
+				ResponseEntity<FindResponseBody> responseEntity = new ResponseEntity<FindResponseBody>(response, HttpStatus.BAD_REQUEST);
+				return responseEntity;
 			}
 		}
 		
@@ -223,7 +229,23 @@ public class AlumniRestController
 		}
 		else
 		{
-			return new ResponseEntity<>(result.getAllErrors(),
+			FindResponseBody response = new FindResponseBody();
+			response.setErrorMessages(new ArrayList<String>());
+			
+			
+			if (result.getAllErrors() != null)
+			{
+				
+				for (ObjectError error: result.getAllErrors())
+				{
+					String errorMessage = "";
+					errorMessage = errorMessage.concat(error.getCodes()[0].toString() + ": " + error.getDefaultMessage() + ".");
+					response.getErrorMessages().add(errorMessage);
+					
+				}
+			}
+			
+			return new ResponseEntity<>(response,
 					HttpStatus.BAD_REQUEST);
 		}
 	}
