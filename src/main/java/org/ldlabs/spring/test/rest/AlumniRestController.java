@@ -2,6 +2,8 @@ package org.ldlabs.spring.test.rest;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.ldlabs.spring.test.model.Student;
 import org.ldlabs.spring.test.repository.StudentRepository;
 import org.ldlabs.spring.test.rest.response.FindResponseBody;
@@ -13,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +24,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+/**
+ * Interfaccia rest.
+ * 
+ * @author Francesco Apollonio
+ *
+ */
 @RestController
 public class AlumniRestController {
+
+	private static final String	REST_BASE	= "/ex-1/alumni";
 
 	@Autowired
 	private StudentRepository repository;
@@ -40,7 +51,7 @@ public class AlumniRestController {
      * 
      * @return Un oggetto di tipo {@link FindResponseBody}.
      */
-    @RequestMapping(value="/ex-1/alumni", method=RequestMethod.GET, produces={"application/json"})
+    @RequestMapping(value=REST_BASE, method=RequestMethod.GET, produces={"application/json"})
     public ResponseEntity<FindResponseBody> find(@RequestParam(value="name", required=false) String name, 
     		@RequestParam(value="education", required=false) String education,
     		@RequestParam(value="page", defaultValue = "0") Integer page, 
@@ -88,7 +99,7 @@ public class AlumniRestController {
      * 
      * @return Lo studente trovato a partire dal suo id, codice di errore 404 nel caso non ci sia uno studente con quel nome.
      */
-    @RequestMapping(value="/ex-1/alumni/{studentId}", method=RequestMethod.GET, produces={"application/json"})
+    @RequestMapping(value=REST_BASE+"/{studentId}", method=RequestMethod.GET, produces={"application/json"})
     public ResponseEntity<Student> get(@PathVariable String studentId) {
 		
     	ResponseEntity<Student> response = null;
@@ -114,17 +125,23 @@ public class AlumniRestController {
      * 
      * @return Il codice di ritorno e' 201 e nell'header e' presente un link alla location con cui ottenere l'oggetto salvato.
      */
-	@RequestMapping(value="/ex-1/alumni", method=RequestMethod.POST, consumes={"application/json"})
-    public ResponseEntity<?> insert(@RequestBody Student student) {
+	@RequestMapping(value=REST_BASE, method=RequestMethod.POST, consumes={"application/json"})
+    public ResponseEntity<?> insert(@RequestBody @Valid Student student, BindingResult result) {
 		
-		Student saved = repository.save(student);
-		
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.setLocation(ServletUriComponentsBuilder
-				.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(saved.getId()).toUri());
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.CREATED);
-		
+		if (!result.hasErrors())
+		{
+			Student saved = repository.save(student);
+			
+			HttpHeaders httpHeaders = new HttpHeaders();
+			httpHeaders.setLocation(ServletUriComponentsBuilder
+					.fromCurrentRequest().path("/{id}")
+					.buildAndExpand(saved.getId()).toUri());
+			return new ResponseEntity<>(null, httpHeaders, HttpStatus.CREATED);
+		}
+		else
+		{
+			return new ResponseEntity<>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+		}
     }
     
 }

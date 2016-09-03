@@ -2,6 +2,11 @@ package org.ldlabs.spring.test.model;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.annotation.Id;
 
 public class Student {
@@ -9,8 +14,10 @@ public class Student {
 	@Id
 	private String id;
 	
+	@Pattern(regexp="^[a-zA-Z]+$")
     private String name;
     
+    @Valid
 	private List<Address> addresses;
     
 	private Education education;
@@ -39,6 +46,8 @@ public class Student {
 	 * 
 	 * @return
 	 */
+	@NotNull
+	@Size(min=1)
 	public String getName()
 	{
 		return this.name;
