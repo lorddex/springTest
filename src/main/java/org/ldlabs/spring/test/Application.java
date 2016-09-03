@@ -32,7 +32,7 @@ public class Application implements CommandLineRunner
 		repository.deleteAll();
 
 		// Inserimento studente di prova ....
-		Student student = new Student("Pippo");
+		Student student = new Student("Paolo");
 		Address address = new Address("Via Prova", 1, "Italy");
 		student.setAddresses(new ArrayList<Address>());
 		student.getAddresses().add(address);

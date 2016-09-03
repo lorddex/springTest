@@ -32,6 +32,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  *
  */
 @RestController
+@RequestMapping(value = AlumniRestController.REST_BASE)
 public class AlumniRestController
 {
 
@@ -76,7 +77,7 @@ public class AlumniRestController
 	 * @return Un oggetto di tipo
 	 *         {@link FindResponseBody}.
 	 */
-	@RequestMapping(value = REST_BASE, method = RequestMethod.GET, produces = { "application/json" })
+	@RequestMapping( method = RequestMethod.GET, produces = { "application/json" })
 	public ResponseEntity<FindResponseBody> find(
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "education", required = false) String education,
@@ -139,7 +140,7 @@ public class AlumniRestController
 	 *         caso non ci sia uno studente con
 	 *         quel nome.
 	 */
-	@RequestMapping(value = REST_BASE + "/{studentId}", method = RequestMethod.GET, produces = { "application/json" })
+	@RequestMapping(value = "/{studentId}", method = RequestMethod.GET, produces = { "application/json" })
 	public ResponseEntity<Student> get(@PathVariable String studentId)
 	{
 
@@ -213,7 +214,7 @@ public class AlumniRestController
 	 *         alla location con cui ottenere
 	 *         l'oggetto salvato.
 	 */
-	@RequestMapping(value = REST_BASE, method = RequestMethod.POST, consumes = { "application/json" })
+	@RequestMapping( method = RequestMethod.POST, consumes = { "application/json" })
 	public ResponseEntity<?> insert(@RequestBody @Valid Student student,
 			BindingResult result)
 	{
