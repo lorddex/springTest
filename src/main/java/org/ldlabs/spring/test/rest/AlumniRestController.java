@@ -39,8 +39,8 @@ public class AlumniRestController
 	/**
 	 * The REST base path.
 	 */
-	public static final String	REST_BASE	= "/ex-1/alumni";
-
+	public static final String	REST_BASE	= "/ex-1/v1.0/alumni";
+	
 	@Autowired
 	private StudentRepository repository;
 

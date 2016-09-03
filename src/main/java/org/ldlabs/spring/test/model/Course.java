@@ -1,19 +1,18 @@
-package org.ldlabs.spring.test.model;
 
+package org.ldlabs.spring.test.model;
 
 public class Course
 {
 
 	private String university;
-	
+
 	private Integer year;
-	
+
 	public Course()
 	{
 		super();
 	}
-	
-	
+
 	public Course(String university, Integer year)
 	{
 		super();
@@ -30,7 +29,8 @@ public class Course
 	}
 
 	/**
-	 * @param university the university to set
+	 * @param university
+	 *            the university to set
 	 */
 	public void setUniversity(String university)
 	{
@@ -46,11 +46,12 @@ public class Course
 	}
 
 	/**
-	 * @param year the year to set
+	 * @param year
+	 *            the year to set
 	 */
 	public void setYear(Integer year)
 	{
 		this.year = year;
 	}
-	
+
 }

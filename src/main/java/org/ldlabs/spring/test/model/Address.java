@@ -1,3 +1,4 @@
+
 package org.ldlabs.spring.test.model;
 
 import javax.validation.constraints.Min;
@@ -12,24 +13,24 @@ import javax.validation.constraints.Size;
  */
 public class Address
 {
-	
+
 	@NotNull
-	@Size(min=1)
+	@Size(min = 1)
 	private String street;
-	
+
 	@NotNull
 	@Min(1)
 	private Integer number;
-	
+
 	@NotNull
-	@Size(min=1)
+	@Size(min = 1)
 	private String country;
-	
+
 	public Address()
 	{
 		super();
 	}
-	
+
 	public Address(String street, Integer number, String country)
 	{
 		super();
@@ -47,7 +48,8 @@ public class Address
 	}
 
 	/**
-	 * @param street the street to set
+	 * @param street
+	 *            the street to set
 	 */
 	public void setStreet(String street)
 	{
@@ -63,7 +65,8 @@ public class Address
 	}
 
 	/**
-	 * @param number the number to set
+	 * @param number
+	 *            the number to set
 	 */
 	public void setNumber(Integer number)
 	{
@@ -79,18 +82,19 @@ public class Address
 	}
 
 	/**
-	 * @param country the country to set
+	 * @param country
+	 *            the country to set
 	 */
 	public void setCountry(String country)
 	{
 		this.country = country;
 	}
-	
+
 	@Override
-    public String toString() {
-        return String.format(
-                "Address[street='%s', no='%s', country='%s']",
-                street, number, country);
-    }
-	
+	public String toString()
+	{
+		return String.format("Address[street='%s', no='%s', country='%s']",
+				street, number, country);
+	}
+
 }

@@ -1,13 +1,13 @@
-package org.ldlabs.spring.test.model;
 
+package org.ldlabs.spring.test.model;
 
 public class Education
 {
 
 	private Course master;
-	
+
 	private Course phd;
-	
+
 	public Education()
 	{
 		super();
@@ -22,7 +22,8 @@ public class Education
 	}
 
 	/**
-	 * @param master the master to set
+	 * @param master
+	 *            the master to set
 	 */
 	public void setMaster(Course master)
 	{
@@ -38,12 +39,12 @@ public class Education
 	}
 
 	/**
-	 * @param phd the phd to set
+	 * @param phd
+	 *            the phd to set
 	 */
 	public void setPhd(Course phd)
 	{
 		this.phd = phd;
 	}
-	
-	
+
 }
