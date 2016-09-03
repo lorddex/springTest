@@ -6,13 +6,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.ldlabs.spring.test.model.Student;
+import org.ldlabs.spring.test.repository.StudentCustomRepository;
 import org.ldlabs.spring.test.repository.StudentRepository;
 import org.ldlabs.spring.test.rest.response.FindResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +40,9 @@ public class AlumniRestController
 	
 	@Autowired
 	private StudentRepository repository;
-
+	
 	@Autowired
-	private MongoTemplate mongoTemplate;
+	private StudentCustomRepository customRepository;
 
 	/**
 	 * Restituisce una serie di elementi ricercati
@@ -85,28 +82,7 @@ public class AlumniRestController
 			@RequestParam(value = "limit", defaultValue = "100") Integer limit)
 	{
 
-		Query query = new Query();
-		query.with(new PageRequest(page, limit));
-
-		if (name != null)
-		{
-			query.addCriteria(Criteria.where("name").regex(name, "i"));
-		}
-
-		if (education != null)
-		{
-			if ("phd".equals(education.toLowerCase()))
-			{
-				query.addCriteria(Criteria.where("education.phd").exists(true));
-			}
-			else if ("master".equals(education.toLowerCase()))
-			{
-				query.addCriteria(Criteria.where("education.master").exists(
-						true));
-			}
-		}
-
-		List<Student> found = mongoTemplate.find(query, Student.class);
+		List<Student> found = customRepository.findStudentWithDegrees(name, education, page, limit);
 
 		if (found == null || found.isEmpty()) { return new ResponseEntity<FindResponseBody>(
 				HttpStatus.NO_CONTENT); }
