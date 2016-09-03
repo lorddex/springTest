@@ -35,7 +35,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class RestTest
+public class AlumniRestControllerTest
 {
 
 	private MediaType contentType	= new MediaType(
