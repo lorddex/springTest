@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.ldlabs.spring.test.model.Student;
+import org.ldlabs.spring.test.repository.EducationValue;
 import org.ldlabs.spring.test.repository.StudentCustomRepository;
 import org.ldlabs.spring.test.repository.StudentRepository;
 import org.ldlabs.spring.test.rest.response.FindResponseBody;
@@ -82,7 +83,22 @@ public class AlumniRestController
 			@RequestParam(value = "limit", defaultValue = "100") Integer limit)
 	{
 
-		List<Student> found = customRepository.findStudentWithDegrees(name, education, page, limit);
+		
+		EducationValue educationValue = null;
+		
+		if (education != null && !education.isEmpty())
+		{
+			try
+			{
+				educationValue = Enum.valueOf(EducationValue.class, education.toUpperCase());
+			}
+			catch (IllegalArgumentException e)
+			{
+				return new ResponseEntity<FindResponseBody>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		
+		List<Student> found = customRepository.findStudentWithDegrees(name, educationValue, page, limit);
 
 		if (found == null || found.isEmpty()) { return new ResponseEntity<FindResponseBody>(
 				HttpStatus.NO_CONTENT); }

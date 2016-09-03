@@ -3,6 +3,7 @@ package org.ldlabs.spring.test.repository.impl;
 import java.util.List;
 
 import org.ldlabs.spring.test.model.Student;
+import org.ldlabs.spring.test.repository.EducationValue;
 import org.ldlabs.spring.test.repository.StudentCustomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,7 @@ public class StudentCustomRepositoryImpl implements StudentCustomRepository
 	}
 	
 	@Override
-	public List<Student> findStudentWithDegrees(String name, String education, Integer page, Integer limit)
+	public List<Student> findStudentWithDegrees(String name, EducationValue education, Integer page, Integer limit)
 	{
 		
 		Query query = new Query();
@@ -43,11 +44,11 @@ public class StudentCustomRepositoryImpl implements StudentCustomRepository
 
 		if (education != null)
 		{
-			if ("phd".equals(education.toLowerCase()))
+			if (EducationValue.PHD.equals(education))
 			{
 				query.addCriteria(Criteria.where("education.phd").exists(true));
 			}
-			else if ("master".equals(education.toLowerCase()))
+			else if (EducationValue.MASTER.equals(education))
 			{
 				query.addCriteria(Criteria.where("education.master").exists(
 						true));

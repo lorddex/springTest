@@ -8,6 +8,6 @@ import org.ldlabs.spring.test.model.Student;
 public interface StudentCustomRepository
 {
 
-	List<Student> findStudentWithDegrees(String name, String education, Integer page, Integer limit);
+	List<Student> findStudentWithDegrees(String name, EducationValue education, Integer page, Integer limit);
 	
 }
