@@ -51,10 +51,10 @@ public class AlumniRestController
 	 * Restituisce una serie di elementi ricercati
 	 * in base ai parametri. La richiesta puo'
 	 * essere paginata.
-	 * Ex. GET
+	 * Ex.
 	 * 
 	 * <pre>
-	 * GET /ex-1/alumni?name=pippo&amp;education=master&amp;page=0&amp;limit=1 HTTP/1.1
+	 * GET /ex-1/v1.0/alumni?name=pippo&amp;education=master&amp;page=0&amp;limit=1 HTTP/1.1
 	 * Host: localhost:8080
 	 * Cache-Control: no-cache
 	 * </pre>
@@ -124,7 +124,7 @@ public class AlumniRestController
 	 * Ex:
 	 * 
 	 * <pre>
-	 * GET /ex-1/alumni/57caa7e97073e61b678c884c HTTP/1.1
+	 * GET /ex-1/v1.0/alumni/57caa7e97073e61b678c884c HTTP/1.1
 	 * Host: localhost:8080
 	 * Cache-Control: no-cache
 	 * </pre>
@@ -171,7 +171,7 @@ public class AlumniRestController
 	 * Ex:
 	 * 
 	 * <pre>
-	 * POST /ex-1/alumni HTTP/1.1
+	 * POST /ex-1/v1.0/alumni HTTP/1.1
 	 * Host: localhost:8080
 	 * Content-Type: application/json
 	 * Authorization: Basic YWRtaW46dGVzdA==
