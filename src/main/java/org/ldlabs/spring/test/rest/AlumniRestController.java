@@ -43,9 +43,6 @@ public class AlumniRestController
 	
 	@Autowired
 	private StudentRepository repository;
-	
-	@Autowired
-	private StudentCustomRepository customRepository;
 
 	/**
 	 * Restituisce una serie di elementi ricercati
@@ -104,7 +101,7 @@ public class AlumniRestController
 			}
 		}
 		
-		List<Student> found = customRepository.findStudentWithDegrees(name, educationValue, page, limit);
+		List<Student> found = repository.findStudentWithDegrees(name, educationValue, page, limit);
 
 		if (found == null || found.isEmpty()) { return new ResponseEntity<FindResponseBody>(
 				HttpStatus.NO_CONTENT); }

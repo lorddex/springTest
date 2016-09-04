@@ -19,13 +19,13 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public class StudentCustomRepositoryImpl implements StudentCustomRepository
+public class StudentRepositoryImpl implements StudentCustomRepository
 {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public StudentCustomRepositoryImpl()
+	public StudentRepositoryImpl()
 	{
 		super();
 	}
