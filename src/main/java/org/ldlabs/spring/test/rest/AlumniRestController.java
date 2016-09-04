@@ -101,7 +101,7 @@ public class AlumniRestController
 			}
 		}
 		
-		List<Student> found = repository.findStudentWithDegrees(name, educationValue, page, limit);
+		List<Student> found = repository.findStudentByNameAndEducationLevel(name, educationValue, page, limit);
 
 		if (found == null || found.isEmpty()) { return new ResponseEntity<FindResponseBody>(
 				HttpStatus.NO_CONTENT); }

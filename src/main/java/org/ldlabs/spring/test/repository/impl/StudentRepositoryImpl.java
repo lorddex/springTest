@@ -31,7 +31,7 @@ public class StudentRepositoryImpl implements StudentCustomRepository
 	}
 	
 	@Override
-	public List<Student> findStudentWithDegrees(String name, EducationValue education, Integer page, Integer limit)
+	public List<Student> findStudentByNameAndEducationLevel(String name, EducationValue education, Integer page, Integer limit)
 	{
 		
 		Query query = new Query();
