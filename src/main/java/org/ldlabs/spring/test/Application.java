@@ -11,9 +11,12 @@ import org.ldlabs.spring.test.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 
 @SpringBootApplication
+@EnableAutoConfiguration(exclude = RepositoryRestMvcAutoConfiguration.class) // disable the auto created rest services
 public class Application implements CommandLineRunner
 {
 
